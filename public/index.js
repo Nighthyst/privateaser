@@ -146,6 +146,35 @@ const actors = [{
   }]
 }];
 
+//Step 1
+events.forEach(function(i_events)
+{
+  bars.forEach(function(i_bars)
+  {
+    if(i_events.barId == i_bars.id)
+    {
+      i_events.price = i_events.persons*i_bars.pricePerPerson + i_events.time*i_bars.pricePerHour
+    }
+  });
+});
+
+/*
+actors.forEach(function(element)
+{
+  element.payment.forEach(function(elt)
+  {
+    if(elt.who == "booker")
+    {
+      cosnole.log("A booker !")
+    }
+    else {
+      console.log("What is this !")
+    }
+  });
+  //console.log(element);
+
+});
+*/
 console.log(bars);
 console.log(events);
 console.log(actors);
