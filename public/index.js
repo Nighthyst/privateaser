@@ -158,23 +158,31 @@ events.forEach(function(i_events)
   });
 });
 
-/*
-actors.forEach(function(element)
+// Step 2 : Decreasing the price in fuction of the number of people
+events.forEach(function(i_events)
 {
-  element.payment.forEach(function(elt)
+  bars.forEach(function(i_bars)
   {
-    if(elt.who == "booker")
+    if(i_events.barId == i_bars.id)
     {
-      cosnole.log("A booker !")
-    }
-    else {
-      console.log("What is this !")
+      i_events.price = (i_events.persons*i_bars.pricePerPerson + i_events.time*i_bars.pricePerHour)
+      if(i_events.persons >= 60)
+      {
+        i_events.price = i_events.price*0.50
+      }
+      else if(i_events.persons >= 20)
+      {
+        i_events.price = i_events.price*0.70
+      }
+      else if(i_events.persons >= 10)
+      {
+        i_events.price = i_events.price*0.90
+      }
+
     }
   });
-  //console.log(element);
-
 });
-*/
+
 console.log(bars);
 console.log(events);
 console.log(actors);
