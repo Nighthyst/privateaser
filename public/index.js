@@ -183,6 +183,19 @@ events.forEach(function(i_events)
   });
 });
 
+//Step 3 - Computing the commission for the different actors
+var commission = 0
+events.forEach(function(i_events)
+{
+  commission = i_events.price*0.30
+  i_events.commission.insurance = commission*0.50
+  commission *= 0.50
+  i_events.commission.treasury = i_events.persons
+  commission -= i_events.persons
+  i_events.commission.privateaser = commission
+
+});
+
 console.log(bars);
 console.log(events);
 console.log(actors);
