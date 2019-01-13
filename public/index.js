@@ -158,6 +158,8 @@ events.forEach(function(i_events)
   });
 });
 
+console.log(events);
+
 // Step 2 : Decreasing the price in fuction of the number of people
 events.forEach(function(i_events)
 {
@@ -183,6 +185,8 @@ events.forEach(function(i_events)
   });
 });
 
+console.log(events);
+
 //Step 3 - Computing the commission for the different actors
 var commission = 0
 events.forEach(function(i_events)
@@ -196,6 +200,8 @@ events.forEach(function(i_events)
 
 });
 
+console.log(events);
+
 //Step 4 - Computing the deductible option (and computing again the commissions)
 events.forEach(function(i_events)
 {
@@ -205,7 +211,7 @@ events.forEach(function(i_events)
     {
       if(i_events.barId == i_bars.id)
       {
-        i_events.price = (i_events.persons*i_bars.pricePerPerson + i_events.time*i_bars.pricePerHour) + i_events.persons
+        i_events.price = (i_events.persons*i_bars.pricePerPerson + i_events.time*i_bars.pricePerHour)
         if(i_events.persons >= 60)
         {
           i_events.price = i_events.price*0.50
@@ -218,7 +224,7 @@ events.forEach(function(i_events)
         {
           i_events.price = i_events.price*0.90
         }
-
+        i_events.price += i_events.persons //I think it is more logical to add the deductible option after the discount
       }
     });
   }
@@ -248,6 +254,61 @@ events.forEach(function(i_events)
 
 });
 
+console.log(events);
+
+
+//Step 5 - To pay the actors
+commission = 0
+
+//First, we need to compute the calculation taking in account the deductible option
+events.forEach(function(i_events)
+{
+  commission = i_events.price*0.30
+  i_events.commission.insurance = commission*0.50
+  commission *= 0.50
+  i_events.commission.treasury = i_events.persons
+  commission -= i_events.persons
+  if(i_events.options.deductibleReduction == true)
+  {
+    /*
+    I add directly to the commission of the website the deductible option
+    */
+    i_events.commission.privateaser = commission + i_events.persons
+  }
+  else
+  {
+    i_events.commission.privateaser = commission
+  }
+});
+
+var booking_price = 0
+actors.forEach(function(i_actors)
+{
+  booking_price = events.find(x => x.id == i_actors.eventId).price
+  i_actors.payment.forEach(function(i_payments)
+  {
+    switch(i_payments.who)
+    {
+      case "booker":
+        i_payments.amount = booking_price
+        break;
+      case "bar":
+        i_payments.amount = booking_price*0.70
+        break;
+      case "insurance":
+        i_payments.amount = events.find(x => x.id == i_actors.eventId).commission.insurance
+        break;
+      case "treasury":
+        i_payments.amount = events.find(x => x.id == i_actors.eventId).commission.treasury
+        break;
+      case "privateaser":
+        i_payments.amount = events.find(x => x.id == i_actors.eventId).commission.privateaser
+        break;
+      default:
+
+    }
+  });
+});
 
 console.log(bars);
 console.log(events);
