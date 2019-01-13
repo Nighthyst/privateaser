@@ -1,6 +1,6 @@
 'use strict';
 
-//list of bats
+//list of bars
 //useful for ALL 5 steps
 //could be an array of objects that you fetched from api or database
 const bars = [{
@@ -195,6 +195,59 @@ events.forEach(function(i_events)
   i_events.commission.privateaser = commission
 
 });
+
+//Step 4 - Computing the deductible option (and computing again the commissions)
+events.forEach(function(i_events)
+{
+  if(i_events.options.deductibleReduction == true)
+  {
+    bars.forEach(function(i_bars)
+    {
+      if(i_events.barId == i_bars.id)
+      {
+        i_events.price = (i_events.persons*i_bars.pricePerPerson + i_events.time*i_bars.pricePerHour) + i_events.persons
+        if(i_events.persons >= 60)
+        {
+          i_events.price = i_events.price*0.50
+        }
+        else if(i_events.persons >= 20)
+        {
+          i_events.price = i_events.price*0.70
+        }
+        else if(i_events.persons >= 10)
+        {
+          i_events.price = i_events.price*0.90
+        }
+
+      }
+    });
+  }
+  else
+  {
+    bars.forEach(function(i_bars)
+    {
+      if(i_events.barId == i_bars.id)
+      {
+        i_events.price = (i_events.persons*i_bars.pricePerPerson + i_events.time*i_bars.pricePerHour)
+        if(i_events.persons >= 60)
+        {
+          i_events.price = i_events.price*0.50
+        }
+        else if(i_events.persons >= 20)
+        {
+          i_events.price = i_events.price*0.70
+        }
+        else if(i_events.persons >= 10)
+        {
+          i_events.price = i_events.price*0.90
+        }
+
+      }
+    });
+  }
+
+});
+
 
 console.log(bars);
 console.log(events);
